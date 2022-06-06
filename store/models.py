@@ -1,5 +1,3 @@
-from random import choices
-from wsgiref.simple_server import demo_app
 from django.db import models
 
 
@@ -22,7 +20,6 @@ class Product(models.Model):
     price = models.DecimalField(max_digits=6, decimal_places=2)
     inventory = models.IntegerField()
     last_update = models.DateTimeField(auto_now=True)
-    # Exercise
     # PROTECT - DOES NOT DELETE THE PRODUCTS
     collection = models.ForeignKey(Collection, on_delete=models.PROTECT)
     promotions = models.ManyToManyField(Promotion)
@@ -62,7 +59,6 @@ class Order(models.Model):
     placed_at = models.DateTimeField(auto_now_add=True)
     payment_status = models.CharField(
         max_length=1, choices=PAYMENT_STATUS_CHOICES, default=PENDING_PAYMENT_STATUS)
-    # Exercise
     customer = models.ForeignKey(Customer, on_delete=models.PROTECT)
 
 
