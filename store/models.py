@@ -21,7 +21,6 @@ class Product(models.Model):
     unit_price = models.DecimalField(max_digits=6, decimal_places=2)
     inventory = models.IntegerField()
     last_update = models.DateTimeField(auto_now=True)
-    # PROTECT - DOES NOT DELETE THE PRODUCTS
     collection = models.ForeignKey(Collection, on_delete=models.PROTECT)
     promotions = models.ManyToManyField(Promotion)
 
