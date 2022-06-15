@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.core.exceptions import ObjectDoesNotExist
+from django.db.models import Q # OR
 from store.models import Product, Customer, Collection, Order, OrderItem
 
 # NOTE: Every models class has a manager 'objects'
@@ -9,6 +10,7 @@ def say_hello(request):
     # NOTE: Retrieving Objects
     # exists = Product.objects.filter(pk=0).exists()
 
+    # =============================================
     # NOTE: Filtering Objects
     # queryset = Product.objects.filter(unit_price__gt=20)
     # queryset = Product.objects.filter(unit_price__range=(20, 30))
@@ -31,5 +33,10 @@ def say_hello(request):
 
     # 5. Order items for products in collection 3
     # queryset = OrderItem.objects.filter(product__collection__id=3)
+
+    # =============================================
+    # NOTE: Complex Lookups using Q objects
+    # queryset = Product.objects.filter(inventory__lt=10).filter(unit_price__lt=20) # AND
+    queryset = Product.objects.filter(Q(inventory__lt=10) | Q(unit_price__lt=20)) # OR
 
     return render(request, 'hello.html', {'name': 'Samuel', 'products': list(queryset)})
