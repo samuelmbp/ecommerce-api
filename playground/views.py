@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.core.exceptions import ObjectDoesNotExist
-from django.db.models import Q, F, Value
+from django.db.models import Q, F, Value, Func
+from django.db.models.functions import Concat
 from django.db.models.aggregates import Count, Min, Max, Avg, Sum
 from store.models import Product, Customer, Collection, Order, OrderItem
 
@@ -117,8 +118,18 @@ def say_hello(request):
     # )
 
     # =============================================
-    # NOTE: Annotating Objects = adding additional attributes while querying
-    # queryset = Customer.objects.annotate(is_new=Value(True)) # is_new becomes a filed in the db
-    queryset = Customer.objects.annotate(new_id=F('id')) # Increases from 1..1000
+    # NOTE: Annotating Objects = adding additional attributes/fields while querying
+    # queryset = Customer.objects.annotate(is_new=Value(True)) # is_new becomes a field in the db
+    # queryset = Customer.objects.annotate(new_id=F('id')) # Increases from 1..1000
+
+    # =============================================
+    # NOTE: Calling DB Functions
+    # queryset = Customer.objects.annotate(
+    #     full_name=Func(F('first_name'), Value(
+    #         ' '), ('last_name'), function='CONCAT')
+    # )
+    # Shorter and cleaner with Concat
+    queryset = Customer.objects.annotate(
+        full_name=Concat('first_name', Value(' '), 'last_name'))
 
     return render(request, 'hello.html', {'name': 'Samuel', 'result': list(queryset)})
