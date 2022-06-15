@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.core.exceptions import ObjectDoesNotExist
-from django.db.models import Q, F
+from django.db.models import Q, F, Value
+from django.db.models.aggregates import Count, Min, Max, Avg, Sum
 from store.models import Product, Customer, Collection, Order, OrderItem
 
 # NOTE: Every models class has a manager 'objects'
@@ -88,6 +89,36 @@ def say_hello(request):
     #     'promotions').select_related('collection').all()
 
     # Exercise
-    queryset = Order.objects.select_related('customer').prefetch_related('orderitem_set__product').order_by('-placed_at')[:5]  
+    # queryset = Order.objects.select_related('customer').prefetch_related('orderitem_set__product').order_by('-placed_at')[:5]
 
-    return render(request, 'hello.html', {'name': 'Samuel', 'orders': list(queryset)})
+    # =============================================
+    # NOTE: Aggregating Objects
+    # result = Product.objects.aggregate(
+    #     count=Count('id'), min_price=Min('unit_price'))
+
+    # Exercises
+    # 1. How many orders do we have?
+    # result = Order.objects.aggregate(order_count=Count('id'))
+
+    # 2. How many units of product 1 have we sold?
+    # result = OrderItem.objects \
+    #     .filter(product__id=1) \
+    #     .aggregate(units_sold=Sum('quantity'))
+
+    # 3. How many orders has customer 1 placed?
+    # result = Order.objects.filter(customer__id=1).aggregate(count=Count('id'))
+
+    # 4. What is the min, max and average price of the products in collection 3?
+    # result = Product.objects.filter(collection__id=3) \
+    #     .aggregate(
+    #         min_price=Min('unit_price'),
+    #         max_price=Max('unit_price'),
+    #         avg_price=Avg('unit_price')
+    # )
+
+    # =============================================
+    # NOTE: Annotating Objects = adding additional attributes while querying
+    # queryset = Customer.objects.annotate(is_new=Value(True)) # is_new becomes a filed in the db
+    queryset = Customer.objects.annotate(new_id=F('id')) # Increases from 1..1000
+
+    return render(request, 'hello.html', {'name': 'Samuel', 'result': list(queryset)})
