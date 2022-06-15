@@ -67,7 +67,27 @@ def say_hello(request):
     # Exercise:
     # - select products that have been ordered and sort them by title
 
-    queryset = Product.objects.filter(id__in=OrderItem.objects.values(
-        'product__id').distinct()).order_by('title')  # distinct = no duplication
+    # queryset = Product.objects.filter(id__in=OrderItem.objects.values(
+    #     'product__id').distinct()).order_by('title')  # distinct = no duplication
 
-    return render(request, 'hello.html', {'name': 'Samuel', 'products': list(queryset)})
+    # =============================================
+    # NOTE: Deferring Fields
+    # Returns instances of the product class
+    # queryset = Product.objects.only('id', 'title', 'unit_price')
+    # all fields except description
+    # queryset = Product.objects.defer('description')
+
+    # =============================================
+    # NOTE: Selecting Related Objects
+    # queryset = Product.objects.select_related('collection').all() # Product has one relation (to collection)
+    # queryset = Product.objects.prefetch_related(
+    #     'promotions').all()  # Product has many relations (Promotion)
+
+    # Complex query
+    # queryset = Product.objects.prefetch_related(
+    #     'promotions').select_related('collection').all()
+
+    # Exercise
+    queryset = Order.objects.select_related('customer').prefetch_related('orderitem_set__product').order_by('-placed_at')[:5]  
+
+    return render(request, 'hello.html', {'name': 'Samuel', 'orders': list(queryset)})
