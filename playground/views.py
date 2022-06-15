@@ -44,4 +44,12 @@ def say_hello(request):
     # queryset = Product.objects.filter(inventory=F('unit_price'))
     # queryset = Product.objects.filter(inventory=F('collection__id'))
 
+    # =============================================
+    # NOTE: Sorting Data
+    # queryset = Product.objects.order_by('title') # A - Z
+    # queryset = Product.objects.order_by('-title') # Z - A
+    # product = Product.objects.order_by('unit_price')[0]
+    # product = Product.objects.earliest('unit_price') # Returns an object
+    # product = Product.objects.latest('unit_price')
+
     return render(request, 'hello.html', {'name': 'Samuel', 'products': list(queryset)})
