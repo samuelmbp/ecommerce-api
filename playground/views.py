@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.core.exceptions import ObjectDoesNotExist
-from django.db.models import Q, F 
+from django.db.models import Q, F
 from store.models import Product, Customer, Collection, Order, OrderItem
 
 # NOTE: Every models class has a manager 'objects'
@@ -51,5 +51,23 @@ def say_hello(request):
     # product = Product.objects.order_by('unit_price')[0]
     # product = Product.objects.earliest('unit_price') # Returns an object
     # product = Product.objects.latest('unit_price')
+
+    # =============================================
+    # NOTE: Limiting Results
+    # queryset = Product.objects.all()[:5]  # 0, 1, 2, 3, 4
+    # queryset = Product.objects.all()[5:10]  # 5, 6, 7, 8, 9
+
+    # =============================================
+    # NOTE: Selecting Fields to Query
+    # queryset = Product.objects.values('id', 'title') # returns key-value pairs (dictionaries)
+    # queryset = Product.objects.values(
+    # 'id', 'title', 'collection__id')  # Joint query
+    # queryset = Product.objects.values_list('id', 'title')  # returns tuples
+
+    # Exercise:
+    # - select products that have been ordered and sort them by title
+
+    queryset = Product.objects.filter(id__in=OrderItem.objects.values(
+        'product__id').distinct()).order_by('title')  # distinct = no duplication
 
     return render(request, 'hello.html', {'name': 'Samuel', 'products': list(queryset)})
