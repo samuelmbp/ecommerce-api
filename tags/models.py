@@ -2,13 +2,25 @@ from django.db import models
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
 
+
 class Tag(models.Model):
-  label = models.CharField(max_length=255)
+    label = models.CharField(max_length=255)
+
+class TaggedItemManager(models.Manager): # Custom Manager to query generic relationships
+    def get_tags_for(self, obj_type, obj_id):
+        content_type = ContentType.objects.get_for_model(obj_type)
+        return TaggedItem.objects \
+            .select_related('tag') \
+            .filter(
+                content_type=content_type,
+                object_id=obj_id
+            )
 
 
 class TaggedItem(models.Model):
-  tag = models.ForeignKey(Tag, on_delete=models.CASCADE)
-  content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
-  object_id = models.PositiveBigIntegerField()
-  # Reads a particular obj the tag is applied to
-  content_object = GenericForeignKey()
+    objects = TaggedItemManager()
+    tag = models.ForeignKey(Tag, on_delete=models.CASCADE)
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+    object_id = models.PositiveBigIntegerField()
+    # Reads a particular obj the tag is applied to
+    content_object = GenericForeignKey()

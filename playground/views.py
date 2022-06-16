@@ -3,7 +3,10 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q, F, Value, Func, ExpressionWrapper, DecimalField
 from django.db.models.functions import Concat
 from django.db.models.aggregates import Count, Min, Max, Avg, Sum
+from django.contrib.contenttypes.models import ContentType
+
 from store.models import Product, Customer, Collection, Order, OrderItem
+from tags.models import TaggedItem
 
 # NOTE: Every models class has a manager 'objects'
 
@@ -160,8 +163,12 @@ def say_hello(request):
     # ))
 
     # 5. Top 5 best-selling products and their total sales
-    queryset = Product.objects.annotate(total_amount_sales=Sum(
-        F('orderitem__unit_price') * F('orderitem__quantity')
-    )).order_by('-total_amount_sales')[:5]
+    # queryset = Product.objects.annotate(total_amount_sales=Sum(
+    #     F('orderitem__unit_price') * F('orderitem__quantity')
+    # )).order_by('-total_amount_sales')[:5]
 
-    return render(request, 'hello.html', {'name': 'Samuel', 'result': list(queryset)})
+    # =============================================
+    # NOTE: Querying Generic Relationships & Custom Manager
+    queryset = TaggedItem.objects.get_tags_for(Product, 1)
+
+    return render(request, 'hello.html', {'name': 'Samuel', 'tags': list(queryset)})
