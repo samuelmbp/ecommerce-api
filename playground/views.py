@@ -240,10 +240,10 @@ def say_hello(request):
     # ==================================================
     # NOTE: EXECUTING ROW SQL QUERIES
     # queryset = Product.objects.raw('SELECT * FROM store_product')
-    queryset = Product.objects.raw('SELECT id, title FROM store_product')
+    # queryset = Product.objects.raw('SELECT id, title FROM store_product')
 
-    # Working with connection module
-    with connection.cursor() as cursor:
-        cursor.execute()
+    # # Working with connection module
+    # with connection.cursor() as cursor:
+    #     cursor.execute()
     
-    return render(request, 'hello.html', {'name': 'Samuel', 'result': list(queryset)})
+    return render(request, 'hello.html', {'name': 'Samuel'})
