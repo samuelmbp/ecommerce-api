@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.core.exceptions import ObjectDoesNotExist
-from django.db.models import Q, F, Value, Func
+from django.db.models import Q, F, Value, Func, ExpressionWrapper, DecimalField
 from django.db.models.functions import Concat
 from django.db.models.aggregates import Count, Min, Max, Avg, Sum
 from store.models import Product, Customer, Collection, Order, OrderItem
@@ -129,7 +129,39 @@ def say_hello(request):
     #         ' '), ('last_name'), function='CONCAT')
     # )
     # Shorter and cleaner with Concat
-    queryset = Customer.objects.annotate(
-        full_name=Concat('first_name', Value(' '), 'last_name'))
+    # queryset = Customer.objects.annotate(
+    #     full_name=Concat('first_name', Value(' '), 'last_name'))
+
+    # =============================================
+    # NOTE: Grouping Data
+    # queryset = Customer.objects.annotate(orders_count=Count('order'))
+
+    # =============================================
+    # NOTE: Expression Wrappers - Complex Expressions
+    # discounted_price = ExpressionWrapper(
+    #     F('unit_price') * 0.8, output_field=DecimalField())
+
+    # queryset = Product.objects.annotate(discounted_price=discounted_price)
+
+    # Exercises
+    # 1. Customers with their last order id
+    # queryset = Customer.objects.annotate(last_order_id=Max('order__id'))
+
+    # 2. Collections and count of their products
+    # queryset = Collection.objects.annotate(count_products=Count('product'))
+
+    # 3. Customers with more than 5 orders
+    # queryset = Customer.objects.annotate(
+    #     orders_count=Count('order')).filter(orders_count__gt=5)
+
+    # 4. Customers and the total amount they’ve spent
+    # queryset = Customer.objects.annotate(total_amount_spent=Sum(
+    #     F('order__orderitem__unit_price') * F('order__orderitem__quantity')
+    # ))
+
+    # 5. Top 5 best-selling products and their total sales
+    queryset = Product.objects.annotate(total_amount_sales=Sum(
+        F('orderitem__unit_price') * F('orderitem__quantity')
+    )).order_by('-total_amount_sales')[:5]
 
     return render(request, 'hello.html', {'name': 'Samuel', 'result': list(queryset)})
