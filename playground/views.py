@@ -5,7 +5,7 @@ from django.db.models.functions import Concat
 from django.db.models.aggregates import Count, Min, Max, Avg, Sum
 from django.contrib.contenttypes.models import ContentType
 
-from store.models import Product, Customer, Collection, Order, OrderItem
+from store.models import CartItem, Cart, Product, Customer, Collection, Order, OrderItem
 from tags.models import TaggedItem
 
 # NOTE: Every models class has a manager 'objects'
@@ -169,6 +169,57 @@ def say_hello(request):
 
     # =============================================
     # NOTE: Querying Generic Relationships & Custom Manager
-    queryset = TaggedItem.objects.get_tags_for(Product, 1)
+    # queryset = TaggedItem.objects.get_tags_for(Product, 1)
 
-    return render(request, 'hello.html', {'name': 'Samuel', 'tags': list(queryset)})
+    # =============================================
+    # NOTE: Creating Objects
+    # collection = Collection()
+    # collection.title = 'Video Games'
+    # collection.featured_product = Product(pk=1)
+    # collection.save()
+
+    # Shorter
+    # Collection.objects.create(title='Video Games', featured_product_id=1)
+
+    # =============================================
+    # NOTE: Updating Objects
+    # collection = Collection(pk=13)
+    # collection.title = 'New Games' # If title is not set, it will return an empty string
+    # collection.featured_product = None
+    # collection.save()
+
+    # Update only necessary fields
+    # Collection.objects.filter(pk=13).update(featured_product=None)
+
+    # =============================================
+    # NOTE: Deleting Objects
+    collection = Collection(pk=13) # Single collection
+    collection.delete()
+
+    # Multiple collections
+    Collection.objects.filter(pk__gt=5).delete()
+
+    # Exercises
+    # 1. CRUD a shopping cart with an item
+    cart = Cart()
+    cart.save()
+
+    # Create
+    random_item = CartItem()
+    random_item.cart = cart
+    random_item.product_id = 1
+    random_item.quantity = 1
+    random_item.save()
+
+    # Update
+    random_item = CartItem.objects.get(pk=1)
+    random_item.quantity = 2
+    random_item.save()
+
+    # Delete a cart
+    cart = Cart(pk=1)
+    cart.delete
+
+
+
+    return render(request, 'hello.html', {'name': 'Samuel'})
