@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.db import transaction
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q, F, Value, Func, ExpressionWrapper, DecimalField
 from django.db.models.functions import Concat
@@ -193,33 +194,47 @@ def say_hello(request):
 
     # =============================================
     # NOTE: Deleting Objects
-    collection = Collection(pk=13) # Single collection
-    collection.delete()
+    # collection = Collection(pk=13) # Single collection
+    # collection.delete()
 
-    # Multiple collections
-    Collection.objects.filter(pk__gt=5).delete()
+    # # Multiple collections
+    # Collection.objects.filter(pk__gt=5).delete()
 
     # Exercises
     # 1. CRUD a shopping cart with an item
-    cart = Cart()
-    cart.save()
+    # cart = Cart()
+    # cart.save()
 
-    # Create
-    random_item = CartItem()
-    random_item.cart = cart
-    random_item.product_id = 1
-    random_item.quantity = 1
-    random_item.save()
+    # # Create
+    # random_item = CartItem()
+    # random_item.cart = cart
+    # random_item.product_id = 1
+    # random_item.quantity = 1
+    # random_item.save()
 
-    # Update
-    random_item = CartItem.objects.get(pk=1)
-    random_item.quantity = 2
-    random_item.save()
+    # # Update
+    # random_item = CartItem.objects.get(pk=1)
+    # random_item.quantity = 2
+    # random_item.save()
 
-    # Delete a cart
-    cart = Cart(pk=1)
-    cart.delete
+    # # Delete a cart
+    # cart = Cart(pk=1)
+    # cart.delete
 
+    # =================================================
+    # NOTE: TRANSACTIONS
+    # ...
+    with transaction.atomic():
+        order = Order()
+        order.customer_id = 1
+        order.save()
 
+        item = OrderItem()
+        item.order = order
+        # item.product_id = -1 # error
+        item.product_id = 1  # success
+        item.quantity = 1
+        item.unit_price = 10
+        item.save()
 
     return render(request, 'hello.html', {'name': 'Samuel'})
