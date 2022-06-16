@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.db import transaction
+from django.db import transaction, connection
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q, F, Value, Func, ExpressionWrapper, DecimalField
 from django.db.models.functions import Concat
@@ -224,17 +224,26 @@ def say_hello(request):
     # =================================================
     # NOTE: TRANSACTIONS
     # ...
-    with transaction.atomic():
-        order = Order()
-        order.customer_id = 1
-        order.save()
+    # with transaction.atomic():
+    #     order = Order()
+    #     order.customer_id = 1
+    #     order.save()
 
-        item = OrderItem()
-        item.order = order
-        # item.product_id = -1 # error
-        item.product_id = 1  # success
-        item.quantity = 1
-        item.unit_price = 10
-        item.save()
+    #     item = OrderItem()
+    #     item.order = order
+    #     # item.product_id = -1 # error
+    #     item.product_id = 1  # success
+    #     item.quantity = 1
+    #     item.unit_price = 10
+    #     item.save()
 
-    return render(request, 'hello.html', {'name': 'Samuel'})
+    # ==================================================
+    # NOTE: EXECUTING ROW SQL QUERIES
+    # queryset = Product.objects.raw('SELECT * FROM store_product')
+    queryset = Product.objects.raw('SELECT id, title FROM store_product')
+
+    # Working with connection module
+    with connection.cursor() as cursor:
+        cursor.execute()
+    
+    return render(request, 'hello.html', {'name': 'Samuel', 'result': list(queryset)})
