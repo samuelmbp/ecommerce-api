@@ -1,5 +1,8 @@
+from urllib.request import urlcleanup
 from django.contrib import admin
 from django.db.models.aggregates import Count
+from django.utils.html import format_html, urlencode
+from django.urls import reverse
 
 from . import models
 
@@ -12,7 +15,9 @@ class CollectionAdmin(admin.ModelAdmin):
 
     @admin.display(ordering='products_count')
     def products_count(self, collection):
-        return collection.products_count
+        url = reverse('admin:store_product_changelist') + '?' + \
+            urlencode({'collection__id': str(collection.id)})
+        return format_html('<a href="{}">{}<a/>', url, collection.products_count)
 
     # Override the base queryset (method of ModelAdmin)
     def get_queryset(self, request):
@@ -42,10 +47,18 @@ class ProductAdmin(admin.ModelAdmin):  # Convention: ModelClassAdmin
 
 @admin.register(models.Customer)
 class CustomerAdmin(admin.ModelAdmin):
-    list_display = ['first_name', 'last_name', 'membership']
+    list_display = ['first_name', 'last_name', 'membership', 'total_orders']
     list_editable = ['membership']
     ordering = ['first_name', 'last_name']
     list_per_page = 10
+
+    def total_orders(self, customer):
+        return customer.total_orders
+
+    def get_queryset(self, request):
+        return super().get_queryset(request).annotate(
+            total_orders=Count('order')
+        )
 
 
 @admin.register(models.Order)
