@@ -45,6 +45,7 @@ class ProductAdmin(admin.ModelAdmin):  # Convention: ModelClassAdmin
     prepopulated_fields = {
         'slug': ['title']
     }
+    search_fields = ['order']
     actions = ['clear_inventory']
     list_display = ['title', 'unit_price',
                     'inventory_status', 'collection_title']
@@ -91,9 +92,18 @@ class CustomerAdmin(admin.ModelAdmin):
         )
 
 
+class OrderItemInline(admin.TabularInline):
+    autocomplete_fields = ['product']
+    min_num = 1
+    max_num = 10
+    model = models.OrderItem
+    extra = 0 # Only one row
+
+
 @admin.register(models.Order)
 class OrderAdmin(admin.ModelAdmin):
     list_display = ['id', 'placed_at', 'customer']
+    inlines = [OrderItemInline]
     autocomplete_fields = ['customer']
 
 
