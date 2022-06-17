@@ -3,6 +3,7 @@ from django.db.models.aggregates import Count
 from django.utils.html import format_html, urlencode
 from django.urls import reverse
 
+
 from . import models
 
 
@@ -97,7 +98,7 @@ class OrderItemInline(admin.TabularInline):
     min_num = 1
     max_num = 10
     model = models.OrderItem
-    extra = 0 # Only one row
+    extra = 0  # Only one row
 
 
 @admin.register(models.Order)
