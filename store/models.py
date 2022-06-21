@@ -14,7 +14,6 @@ class Collection(models.Model):
         'Product', on_delete=models.SET_NULL, null=True, related_name='+'
     )
 
-    # Return the title of each collection instead the collection obj
     def __str__(self):
         return self.title
 
