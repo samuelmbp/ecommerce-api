@@ -9,6 +9,13 @@ class CollectionSerializer(serializers.ModelSerializer):
         model = Collection
         fields = ['id', 'title']
 
+    # products_count = serializers.SerializerMethodField(
+    #     method_name='count_products'
+    # )
+
+    # def count_products(self, product):
+    #     return product.featured_product.inventory
+
 
 class ProductSerializer(serializers.ModelSerializer):
     # ModelSerializer -> rest-framework(avoids fields repetition)

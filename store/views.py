@@ -4,8 +4,9 @@ from django.http import HttpResponse
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
-from .models import Product
-from .serializers import ProductSerializer
+
+from .models import Product, Collection
+from .serializers import CollectionSerializer, ProductSerializer
 
 
 # Instance of the Request - rest-framework (Request Class)
@@ -46,6 +47,19 @@ def product_detail(request, id):
             )
         product.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+@api_view(['GET', 'POST'])
+def collection_list(request):
+    if request.method == 'GET':
+        queryset = Collection.objects.all()
+        serializer = CollectionSerializer(queryset, many=True)
+        return Response(serializer.data)
+    elif request.method == 'POST':
+        serializer = CollectionSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
 @api_view()
