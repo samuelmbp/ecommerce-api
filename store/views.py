@@ -14,8 +14,15 @@ from .serializers import CollectionSerializer, ProductSerializer, ReviewSerializ
 
 
 class ProductViewSet(ModelViewSet):
+    queryset = Product.objects.all()  # Returns all the products in the db
     serializer_class = ProductSerializer
-    queryset = Product.objects.all()
+
+    def get_queryset(self):  # Returns only a specific product/products from the db
+        queryset = Product.objects.all()
+        collection_id = self.request.query_params.get('collection_id') # e.g. /?collection_id=2
+        if collection_id is not None:
+            queryset = queryset.filter(collection_id=collection_id)
+        return queryset
 
     def get_serializer_context(self):
         return {'request': self.request}
@@ -45,9 +52,8 @@ class CollectionViewSet(ModelViewSet):
 class ReviewViewSet(ModelViewSet):
     serializer_class = ReviewSerializer
 
-    def get_queryset(self): # Review applies only to a product with a unique id
+    def get_queryset(self):  # Review applies only to a product with a unique id
         return Review.objects.filter(product_id=self.kwargs['product_pk'])
-    
 
     def get_serializer_context(self):
         return {'product_id': self.kwargs['product_pk']}
