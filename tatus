@@ -1,0 +1,78 @@
+[33md07df06[m[33m ([m[1;36mHEAD -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m Can get the cart items
+[33m8050290[m Can delete a cart and its items
+[33mdbd4fcb[m Can get all the products in a cart
+[33m23c9b7b[m Update cartitem model and create a uuid for each cart
+[33mef02818[m Add pagination for the products endpoint api
+[33me178be9[m Add product sorting by unit_price and last_update
+[33m8026304[m  Add product search filter by title and description
+[33m5acb2a7[m Install django-filter and add generic filtering for the products endpoint
+[33m833c151[m Add filtering to view the products for a specific collection id
+[33m1f7edc3[m Use nested routers to display a review for a specific product
+[33m3e8579a[m Build the review api
+[33mdc79206[m Update the urls in the store app to use the rest-framework viewset router urls
+[33mc697ce3[m Use viewsets to combine similar code and logic into a single class
+[33mefda599[m Refactor and clean the code in the ProductDetail and CollectionDetail view by using mixins
+[33md0c566b[m Rrefactor and clean the code in the CollectionList view by using mixins
+[33ma98dc35[m Use rest-framework mixins to refactor and clean the code in the ProductList view
+[33m92be11a[m Refactor product-list and product-detail into a class based view
+[33mdb20751[m Update the collection api endpoint by adding a new field products_count
+[33mda40b75[m Built collection detail api endpoint
+[33mec75849[m Built collection list api
+[33m035009c[m Can delete a product object
+[33mbe0eb83[m Can save and update a product when created
+[33m9b11ea7[m Validate data when creating a new product
+[33mc5947ca[m Deserialize the product_list view to accept POST request
+[33m656ac15[m Refactor product serializer to avoid fields repetition by using ModelSerializer from rest-framework
+[33mb540201[m Create serializing relationships between collection and product
+[33mbda7334[m  Create custom serializer fields for product model class
+[33mf0d1143[m Create serializers file and serialized the Product model
+[33mc0d2ea5[m Create product_view and product_details views for the store app
+[33m4c1acd8[m Install rest-framework and add it to the installed apps
+[33m784c77a[m Create generic relations between product and tags in admin site
+[33m0be5286[m Edit orders form using inlines in the admin site
+[33m23f40b8[m Add data validation for the product model
+[33m75dba6b[m Customize forms for products and order admin site
+[33m04cabeb[m Create custom actions in products admin site
+[33m5c421ed[m Add filtering to the products list page
+[33mb525a83[m Customer can link to the order model in the admin site and add search feature
+[33mb563a25[m Collection can link to the products in the admin site
+[33m978ce78[m Override the base queryset to show the collection product count in the admin site
+[33m3fb1907[m Select related objects - order and customer models
+[33mf093598[m Add inventory status column to the product model in the admin site
+[33m6e4c911[m Customize the list page - admin site
+[33m3afe99e[m Register collection and product models on the admin site
+[33mc5cdac2[m Set-up the admin site
+[33md7b38a7[m Work with raw sql and connection module
+[33m8bfcac1[m Django ORM: transactions
+[33m7073792[m Django ORM: crud operations
+[33m0773116[m Django ORM: querying generic relationships & create custom manager
+[33m722fb52[m Django ORM: grouping data - working with expression wrpappers
+[33mf039774[m Django ORM: calling db functions
+[33m28e10bf[m Django ORM: aggregating and annotating objects
+[33m63f671a[m Django ORM: selecting related objects
+[33mf8457ee[m Django ORM: selecting fields to query
+[33ma44ce4e[m Django ORM: sorting data
+[33m716d202[m Django ORM: referencing fields using F objects
+[33m0dd61cd[m Django ORM: complex lookups using Q objects
+[33m57ebe57[m Django ORM: filtering objects
+[33mddbaf72[m Django ORM: retrieving objects
+[33ma1b5f3f[m Install and connect to mysql database
+[33m2206d17[m Add a new field postcode in the address model and create/run migrations
+[33m4e2b18e[m Run migrations
+[33m7c0547e[m Create migrations for the models in likes, store and tags apps
+[33m4c77b68[m Clean comments in store models file
+[33m656abaa[m Create likes app and add generic relationships in the models
+[33me6d87ff[m Resolve circular relationship between collection and product
+[33m93a164a[m Create many-to-many relationship between promotion and product class
+[33m45dd32b[m Create one-to-many relationships between model classes in store app
+[33m4cda45e[m Implement a one to one relationship between the customer and address
+[33m636749a[m Create order model class for the store app and choice fields
+[33m6fa26b9[m Create product and customer model classes for the store app
+[33mf5a8ad0[m Create store and tags apps
+[33m3e80c7a[m Setup django debug toolbar
+[33ma9ca406[m Create an html file to render content dynamically on the page
+[33mf195e60[m Create the first view hello/ for the playground app
+[33mfab18b0[m Register playground app in the main project
+[33mb658978[m Create the main project storefront and playground app
+[33m63ebf3d[m Project setup
+[33m73047d0[m First commit
