@@ -13,7 +13,7 @@ from rest_framework.viewsets import ModelViewSet, GenericViewSet
 from rest_framework.mixins import ListModelMixin, CreateModelMixin, RetrieveModelMixin, DestroyModelMixin, UpdateModelMixin
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 
-from .permissions import FullDjangoModelPermissions, IsAdminOrReadOnly
+from .permissions import FullDjangoModelPermissions, IsAdminOrReadOnly, ViewCustomerHistoryPermission
 from .models import CartItem, Customer, Product, Collection, OrderItem, Review, Cart
 from .serializers import AddCartItemSerializer, CartItemSerializer, CartSerializer, CollectionSerializer, CustomerSerializer, ProductSerializer, ReviewSerializer, UpdateCartItemSerializer
 from .filters import ProductFilter
@@ -94,8 +94,13 @@ class CartItemViewSet(ModelViewSet):
 class CustomerViewSet(ModelViewSet):
     queryset = Customer.objects.all()
     serializer_class = CustomerSerializer
-    # permission_classes = [IsAdminUser]
-    permission_classes = [FullDjangoModelPermissions] # Model Permissions
+    permission_classes = [IsAdminUser]
+    # permission_classes = [FullDjangoModelPermissions] # Model Permissions
+
+    # Available on the detail list: store/customer/1/history
+    @action(detail=True, permission_classes=[ViewCustomerHistoryPermission])
+    def history(self, request, pk):
+        return Response('ok')
 
     # Available on the list: store/customer/me
     @action(detail=False, methods=['GET', 'PUT'], permission_classes=[IsAuthenticated])
