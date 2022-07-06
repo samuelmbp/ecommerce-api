@@ -1,7 +1,5 @@
 from django.urls import include, path
-# from rest_framework.routers import SimpleRouter, DefaultRouter
 from rest_framework_nested import routers
-from pprint import pprint
 
 from . import views
 
@@ -11,6 +9,7 @@ router.register('products', views.ProductViewSet, basename='products')
 router.register('collections', views.CollectionViewSet)
 router.register('carts', views.CartViewSet)
 router.register('customers', views.CustomerViewSet)
+router.register('orders', views.OrderViewSet)
 
 # Product Router Nested Url
 products_router = routers.NestedDefaultRouter(

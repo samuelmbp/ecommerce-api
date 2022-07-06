@@ -60,7 +60,8 @@ class Customer(models.Model):
     birth_date = models.DateField(null=True)
     membership = models.CharField(
         max_length=1, choices=MEMBERSHIP_CHOICES, default=MEMBERSHIP_BRONZE)
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
     def __str__(self):
         return f'{self.user.first_name} {self.user.last_name}'
@@ -96,15 +97,16 @@ class Order(models.Model):
         max_length=1, choices=PAYMENT_STATUS_CHOICES, default=PENDING_PAYMENT_STATUS)
     customer = models.ForeignKey(Customer, on_delete=models.PROTECT)
     # Customer Permission
+
     class Meta:
         permissions = [
             ('cancel_order', 'Can cancel order')
         ]
 
 
-
 class OrderItem(models.Model):
-    order = models.ForeignKey(Order, on_delete=models.PROTECT)
+    order = models.ForeignKey(
+        Order, on_delete=models.PROTECT, related_name='items')
     product = models.ForeignKey(
         Product, on_delete=models.CASCADE, related_name='orderitems')
     quantity = models.PositiveSmallIntegerField()
@@ -124,14 +126,15 @@ class Cart(models.Model):
 
 
 class CartItem(models.Model):
-    cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name='items')
+    cart = models.ForeignKey(
+        Cart, on_delete=models.CASCADE, related_name='items')
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.PositiveSmallIntegerField(
         validators=[MinValueValidator(1)]
     )
 
     class Meta:
-        # Increase only the quantity if product is the same 
+        # Increase only the quantity if product is the same
         unique_together = [['cart', 'product']]
 
 
