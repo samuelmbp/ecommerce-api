@@ -22,7 +22,8 @@ from .pagination import DefaultPagination
 
 
 class ProductViewSet(ModelViewSet):
-    queryset = Product.objects.all()  # Returns all the products in the db
+    queryset = Product.objects.prefetch_related(
+        'images').all()
     serializer_class = ProductSerializer
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filterset_class = ProductFilter  # e.g. /?collection_id=2
