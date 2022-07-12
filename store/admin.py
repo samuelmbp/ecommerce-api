@@ -39,6 +39,16 @@ class InventoryFilter(admin.SimpleListFilter):  # Custom filter in the admin sit
             return queryset.filter(inventory__lt=10)
 
 
+class ProductImageInline(admin.TabularInline):
+    model = models.ProductImage
+    readonly_fields = ['thumbnail']
+
+    def thumbnail(self, instance):
+        if instance.image.name != '':
+            return format_html(f'<img src="{instance.image.url}" class="thumbnail"/>')
+        return ''
+
+
 @admin.register(models.Product)
 class ProductAdmin(admin.ModelAdmin):  # Convention: ModelClassAdmin
     # Attributes
@@ -48,6 +58,7 @@ class ProductAdmin(admin.ModelAdmin):  # Convention: ModelClassAdmin
     }
     search_fields = ['order']
     actions = ['clear_inventory']
+    inlines = [ProductImageInline]
     list_display = ['title', 'unit_price',
                     'inventory_status', 'collection_title']
     list_editable = ['unit_price']
@@ -72,6 +83,11 @@ class ProductAdmin(admin.ModelAdmin):  # Convention: ModelClassAdmin
             f'{updated_count} products were successfully updated',
             messages.INFO
         )
+
+    class Media: # Static Files
+        css = {
+          'all': ['store/styles.css']  
+        }
 
 
 @admin.register(models.Customer)
